@@ -1,0 +1,158 @@
+---
+title: "8_ggplot2"
+format: html
+editor: visual
+---
+```{r}
+library(palmerpenguins) 
+library(tidyverse)
+
+penguins 
+
+```
+
+```{r}
+# 1. Remove rows 
+
+penguins |> 
+  filter(year == 2007)
+
+penguins |> 
+  filter(bill_length_mm > 40)
+
+  # 2. Create a new column 
+
+penguins |> 
+  mutate(flipper_length_cm = flipper_length_mm/10)
+
+# 3. How many penguins are there on each island 
+
+penguins |> 
+  count(island)
+
+penguins |> 
+  group_by(island) |> 
+  summarize(count = n())
+
+# 4. What is the average flipper length for each species 
+
+penguins |> 
+  summarise(avg_flipper_mm = mean(flipper_length_mm, na.rm = TRUE), 
+            .by = species)
+## took out the nas becuase if you didnt it would show NA 
+
+# 5. What is the average length for each sex of each species? 
+
+penguins |> 
+  filter(!is.na(sex), 
+         !is.na(flipper_length_mm))|> 
+  group_by(species, sex) |> 
+  summarise(avg_flipper_mm = mean(flipper_length_mm))
+
+
+# Visualization with ggplot2
+
+## Grammar of graphics 
+1. data
+2. map data to aesthetics such as position, size, and color 
+3. geometric shape used to represent the data
+4. the statistical transformations applied to the data: 
+5. The scales used for mapping the data to the aesthetic dimensions: 
+6. Coordinate systems for mapping the plane of the data: 
+7. visual non-data components of the plot such as titles, labels, background, gridlines, and legends
+
+## building our first plot one layer at a time 
+
+ggplot(data = penguins)
+
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g))
+## we now have some values on a plot however we are missing actual data points
+
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point()
+
+## this just puts the data on the graph in point form
+
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) + 
+  geom_point()
+
+## this assigns a color to the species on the graph 
+
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g, color = sex)) + 
+  geom_point()
+
+## this assigns a color to the sexes on the graph 
+
+# mapping v. setting an aesthetic 
+
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g), ) + 
+  geom_point(color = "orange")
+
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g, color = sex)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+# lm = linear model
+
+# creats one line across all data 
+  
+```
+
+### Labels and Scales 
+
+```{r}
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point(mapping = aes(color = species, shape = species)) + 
+  geom_smooth(method = "lm") + 
+  labs(title = "Body Mass and Flipper Length", 
+       subtitle = "for blah blah" , 
+       x = "Flipper Length", 
+       y = "body mass", 
+       color = "species", shape = "species") +
+  scale_color_brewer(type + "qual")= 
+  theme_light()
+
+ggplot(penguins, aes(y = species))  + 
+  geom_bar()
+
+# order by count 
+
+ggplot(penguins, aes(x = fct_infreq(species)))  + 
+  geom_bar()
+
+# stat 
+
+penguins |> 
+  count(species) |> 
+  ggplot(aes(x = species, y = n)) + 
+  geom_bar(stat = "identity")
+
+# geom_col 
+
+penguins |> 
+  count(species) |> 
+  ggplot(aes(x = species, y = n)) + 
+  geom_col()
+ 
+
+ggplot(penguins, aes(x = island, fill = species)) + 
+  geom_bar()
+
+ggplot(penguins, aes(x = island, fill = species)) + 
+  geom_bar(position = "fill") 
+
+# facets 
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) + 
+  geom_point(aes())
+
+
+```
+

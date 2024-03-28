@@ -1,0 +1,50 @@
+---
+title: "bbdata"
+format: html
+editor: visual
+---
+
+```{r}
+# import data into R 
+library(tidyverse)
+library(here)
+bonds <-read_csv(here("data_raw","rcbb_1757-1799.csv"))
+
+```
+
+```{r}
+# filter
+
+bonds |> 
+  filter(Year ==1757)
+bonds |> 
+  filter(Month > 5)
+
+```
+
+```{r}
+# count
+
+bonds |> 
+  count(Mother)
+
+bonds |> 
+  count(`Bondsman 3`)
+```
+
+```{r}
+ggplot(data = bonds)
+
+ggplot(data = bonds, 
+       mapping = aes(x = Year, y = Mother)) +
+  geom_point()
+
+ggplot(data = bonds, 
+       mapping = aes(x = Year, y = Bondsman_1)) +
+  geom_point()
+
+ggplot(data = bonds, 
+       mapping = aes(y = Mother, x = Bondsman_1)) +
+  geom_point()
+```
+

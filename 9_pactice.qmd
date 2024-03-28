@@ -1,0 +1,9 @@
+```{r}
+data_url <- "https://raw.githubusercontent.com/sharonhoward/ll-coroners/master/coroners_inquests/wa_coroners_inquests_v1-1.tsv" 
+
+coroner <- read_tsv(data_url)
+
+problems(coroner)
+
+coroner
+```
